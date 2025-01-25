@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { signOut } from '../utils/auth';
 
-export default function NavBar() {
+function PostNavBar() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -18,10 +18,10 @@ export default function NavBar() {
             <Link className="nav-link" href="/">
               Home
             </Link>
-            <Link className="nav-link" href="/">
+            <Link className="nav-link" href="/posts">
               Posts
             </Link>
-            <Link className="nav-link" href="/">
+            <Link className="nav-link" href="/profile">
               Profile
             </Link>
           </Nav>
@@ -34,3 +34,5 @@ export default function NavBar() {
     </Navbar>
   );
 }
+
+export default PostNavBar;

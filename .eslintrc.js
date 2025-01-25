@@ -14,6 +14,7 @@ module.exports = {
   plugins: ['react', 'prettier'],
   rules: {
     'no-unused-vars': 'error', // Ensure no unused variables show errors
+    'react/no-unescaped-entities': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/react-in-jsx-scope': 'off',
     'no-alert': 'off',
