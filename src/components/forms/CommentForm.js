@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { useAuth } from '@/utils/context/authContext';
 import { createComment, updateComment } from '@/api/commentData';
