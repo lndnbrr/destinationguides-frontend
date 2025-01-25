@@ -33,9 +33,9 @@ const createComment = (payload) =>
       .catch(reject);
   });
 
-const updateComment = (payload, id) =>
+const updateComment = (payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${dbURL}/comments/${id}`, {
+    fetch(`${dbURL}/comments/${payload.id}`, {
       method: 'PATCH',
       header: {
         'Content-Type': 'application/json',
