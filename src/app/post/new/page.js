@@ -1,5 +1,8 @@
-import React from 'react';
+'use client';
 
-export default function page() {
-  return <div />;
+import React from 'react';
+import PostForm from '../../../components/forms/PostForm';
+
+export default function CreatePostPage() {
+  return <PostForm />;
 }

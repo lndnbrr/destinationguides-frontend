@@ -1,13 +1,17 @@
 'use client';
 
+/* eslint-disable */
+
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-import useRouter from 'next/router';
+import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
 import { createPost, updatePost } from '../../api/postData';
+import { getRegion } from '../../api/regionData';
+import { getCountry } from '../../api/countryData';
 
 const initialState = {
   title: '',
@@ -20,14 +24,24 @@ const initialState = {
   tags: '',
 };
 
-function PostForm({ obj = initialState }) {
+function PostForm({ obj }) {
   const [formInput, setFormInput] = useState(initialState);
+  const [regions, setRegions] = useState([]);
+  const [countries, setCountries] = useState([]);
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    if (obj.firebaseKey) setFormInput(obj);
+    if (obj.id) setFormInput(obj);
   }, [obj, user]);
+
+  useEffect(() => {
+    getRegion().then(setRegions);
+  }, []);
+
+  useEffect(() => {
+    getCountry().then(setCountries);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,12 +53,12 @@ function PostForm({ obj = initialState }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (obj.firebaseKey) {
-      updatePost(formInput).then(() => router.push(`/posts/`));
+    if (obj.id) {
+      updatePost(formInput).then(() => router.push('/posts'));
     } else {
       const payload = { ...formInput, uid: user.uid };
       createPost(payload).then(({ name }) => {
-        const patchPayload = { firebaseKey: name };
+        const patchPayload = { id: name };
         updatePost(patchPayload).then(() => {
           router.push('/posts');
         });
@@ -54,7 +68,7 @@ function PostForm({ obj = initialState }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2 className="text-white mt-5">{obj.firebaseKey ? 'Update' : 'Create'} Post</h2>
+      <h2 className="text-white mt-5">{obj.id ? 'Update' : 'Create'} Post</h2>
 
       {/* POST TITLE  */}
       <FloatingLabel controlId="floatingInput1" label="Post Title" className="mb-3">
@@ -66,33 +80,47 @@ function PostForm({ obj = initialState }) {
         <Form.Control type="text" placeholder="Enter Name" name="author" value={formInput.author} onChange={handleChange} required />
       </FloatingLabel>
 
-      {/* CATEGORY INPUT  */}
+      {/* COUNTRY INPUT  */}
       <FloatingLabel controlId="floatingInput3" label="Country" className="mb-3">
-        <Form.Control type="text" placeholder="Enter country" name="country" value={formInput.country} onChange={handleChange} required />
+        <Form.Select controlId="dropdown1" type="text" placeholder="Enter country" name="country" value={formInput.country} onChange={handleChange} required>
+          <option></option>
+          {countries.map((country) => (
+            <option key={country.id} value={country.id}>
+              {country.name}
+            </option>
+          ))}
+        </Form.Select>
       </FloatingLabel>
 
       {/* BODY INPUT */}
-      <FloatingLabel controlId="floatingInput3" label="Body" className="mb-3">
+      <FloatingLabel controlId="floatingInput4" label="Body" className="mb-3">
         <Form.Control type="text" placeholder="Enter description" name="post_body" value={formInput.body} onChange={handleChange} required />
       </FloatingLabel>
 
-      {/* COUNTRY INPUT  */}
-      <FloatingLabel controlId="floatingInput3" label="Category" className="mb-3">
+      {/* CATEGORY INPUT  */}
+      <FloatingLabel controlId="floatingInput5" label="Category" className="mb-3">
         <Form.Control type="text" placeholder="Enter category" name="category" value={formInput.category} onChange={handleChange} required />
       </FloatingLabel>
 
       {/* REGION INPUT  */}
-      <FloatingLabel controlId="floatingInput3" label="Region" className="mb-3">
-        <Form.Control type="text" placeholder="Enter region" name="region" value={formInput.region} onChange={handleChange} required />
+      <FloatingLabel controlId="floatingInput6" label="Region" className="mb-3">
+        <Form.Select controlId="dropdown2" type="text" placeholder="Enter region" name="region" value={formInput.region} onChange={handleChange} required>
+          <option></option>
+          {regions.map((region) => (
+            <option key={region.id} value={region.id}>
+              {region.name}
+            </option>
+          ))}
+        </Form.Select>
       </FloatingLabel>
 
       {/* IMAGE INPUT  */}
-      <FloatingLabel controlId="floatingInput4" label="Author Image" className="mb-3">
+      <FloatingLabel controlId="floatingInput7" label="Author Image" className="mb-3">
         <Form.Control type="url" placeholder="Enter an image url" name="image" value={formInput.image} onChange={handleChange} required />
       </FloatingLabel>
 
       {/* SUBMIT BUTTON */}
-      <Button type="submit">{obj.firebaseKey ? 'Update' : 'Create'} Post</Button>
+      <Button type="submit">{obj.id ? 'Update' : 'Create'} Post</Button>
     </Form>
 
     /// // ADD TAG FEATURE HERE???? //////
@@ -103,12 +131,14 @@ PostForm.propTypes = {
   obj: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
-    author: PropTypes.string,
-    category: PropTypes.string,
+    author: PropTypes.number,
+    category: PropTypes.number,
+    image: PropTypes.string,
     body: PropTypes.string,
-    country: PropTypes.string,
-    region: PropTypes.string,
+    country: PropTypes.number,
+    region: PropTypes.number,
     tags: PropTypes.string,
+    created_at: PropTypes.string,
   }),
 };
 

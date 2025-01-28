@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { signOut } from '../utils/auth';
+import RegionDropDown from './RegionDropDown';
 
 function PostNavBar() {
   return (
@@ -18,9 +19,7 @@ function PostNavBar() {
             <Link className="nav-link" href="/">
               Home
             </Link>
-            <Link className="nav-link" href="/posts">
-              Posts
-            </Link>
+            <RegionDropDown />
             <Link className="nav-link" href="/profile">
               Profile
             </Link>
