@@ -16,6 +16,20 @@ const getPosts = (uid) =>
       .catch(reject);
   });
 
+// GET ALL POSTS
+const getAllPosts = () =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/posts`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(Object.values(data)))
+      .catch(reject);
+  });
+
 // GET SINGLE POST
 const getSinglePost = (id) =>
   new Promise((resolve, reject) => {
@@ -90,6 +104,7 @@ const deletePost = (id) =>
 
 export {
   getPosts,
+  getAllPosts,
   createPost,
   getSinglePost,
   deletePost,
