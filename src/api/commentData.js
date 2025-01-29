@@ -1,4 +1,6 @@
-const dbURL = 'http://localhost:8000';
+import { clientCredentials } from '../utils/client';
+
+const dbURL = clientCredentials.databaseURL;
 
 const getComment = () =>
   new Promise((resolve, reject) => {

@@ -16,14 +16,7 @@ function PostCard({ postObj, onUpdate }) {
 
   return (
     <Card>
-      <Card.Img
-        variant="top"
-        src={postObj.image}
-        alt={postObj.title}
-        style={{
-          height: '300px',
-        }}
-      />
+      <Card.Img variant="top" src={postObj.image} alt={postObj.title} style={{ height: '300px' }} />
       <Card.Body>
         <Card.Title>POST TITLE WILL GO HERE</Card.Title>
         <Card.Subtitle>textAlign: 'center', color: '#DDA11E', fontSize: '14px'</Card.Subtitle>

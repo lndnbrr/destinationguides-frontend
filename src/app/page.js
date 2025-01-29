@@ -5,10 +5,23 @@
 import { Button } from 'react-bootstrap';
 import { signOut } from '@/utils/auth'; // anything in the src dir, you can use the @ instead of relative paths
 import { useAuth } from '@/utils/context/authContext';
-import CommentCard from '../components/CommentCard';
+import { useState , useEffect } from 'react';
+// import CommentCard from '../components/CommentCard';
+import PostCard from '../components/PostCard';
+import { getAllPosts } from '../api/postData';
 
 function Home() {
   const { user } = useAuth();
+
+  const [featPosts, setFeatPosts] = useState([]);
+
+  const showFeatPosts = () => {
+    getAllPosts().then(setFeatPosts);
+  };
+
+  useEffect(() => {
+    showFeatPosts();
+  }, []);
 
   return (
     <>
@@ -27,7 +40,12 @@ function Home() {
           Sign Out
         </Button>
       </div>
-      <CommentCard />
+      {/* <CommentCard /> */}
+      <div className="d-flex flex-wrap">
+        {featPosts.map((imagePOst) => (
+          <PostCard key={imagePOst.id} postObj={imagePOst} onUpdate={showFeatPosts} />
+        ))}
+      </div>
     </>
   );
 }
