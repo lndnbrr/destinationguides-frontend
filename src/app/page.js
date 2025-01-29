@@ -1,11 +1,7 @@
 'use client';
 
-// any component that uses useAuth needs this because if a component directly imports useAuth, it needs to be a client component since useAuth uses React hooks.
-
-import { Button } from 'react-bootstrap';
-import { signOut } from '@/utils/auth'; // anything in the src dir, you can use the @ instead of relative paths
 import { useAuth } from '@/utils/context/authContext';
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // import CommentCard from '../components/CommentCard';
 import PostCard from '../components/PostCard';
 import { getAllPosts } from '../api/postData';
@@ -28,23 +24,24 @@ function Home() {
       <div
         className="text-center d-flex flex-column justify-content-center align-content-center"
         style={{
-          height: '90vh',
-          padding: '30px',
-          maxWidth: '400px',
+          padding: '30px 0px 10px 0px',
           margin: '0 auto',
         }}
       >
-        <h1>Hello {user.displayName}! </h1>
-        <p>Click the button below to logout!</p>
-        <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
-          Sign Out
-        </Button>
+        <h1>
+          Hello <span style={{ color: 'gold' }}>{user.displayName}</span>!
+        </h1>
+        <h1>Welcome to the ultimate destination guide!</h1>
       </div>
       {/* <CommentCard /> */}
-      <div className="d-flex flex-wrap">
-        {featPosts.map((imagePOst) => (
-          <PostCard key={imagePOst.id} postObj={imagePOst} onUpdate={showFeatPosts} />
-        ))}
+      <div style={{ border: '3px solid green', padding: '45px 0px 45px 0px' }}>
+        <div className="d-flex flex-wrap justify-content-evenly">
+          {featPosts.slice(0, 3).map((imagePOst) => (
+            <div>
+              <PostCard key={imagePOst.id} postObj={imagePOst} onUpdate={showFeatPosts} />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
