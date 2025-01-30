@@ -15,12 +15,14 @@ function PostCard({ postObj, onUpdate }) {
   };
 
   return (
-    <Card>
+    <Card
+    // style={{ marginLeft: '15px', marginRight: '15px' }}
+    >
       <Card.Img variant="top" src={postObj.image} alt={postObj.title} style={{ height: '300px' }} />
       <Card.Body>
-        <Card.Title>POST TITLE WILL GO HERE</Card.Title>
-        <Card.Subtitle>textAlign: 'center', color: '#DDA11E', fontSize: '14px'</Card.Subtitle>
-        <Card.Text>temp card, description will go here.</Card.Text>
+        <Card.Title>{postObj.title}</Card.Title>
+        <Card.Subtitle>{postObj.category.name}</Card.Subtitle>
+        <Card.Text>By {postObj.author.username}</Card.Text>
 
         {/* TAGS HERE MAYBE?????? */}
 
@@ -39,7 +41,7 @@ function PostCard({ postObj, onUpdate }) {
         </Button>
       </Card.Body>
       <Card.Footer>
-        <small className="text-muted">Last updated 3 mins ago</small>
+        <small className="text-muted">Created on {postObj.created_at}</small>
       </Card.Footer>
     </Card>
   );
@@ -56,8 +58,11 @@ PostCard.propTypes = {
     country: PropTypes.string,
     region: PropTypes.string,
     tags: PropTypes.string,
+    created_at: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
 };
 
 export default PostCard;
+
+// textAlign: 'center', color: '#DDA11E', fontSize: '14px'
