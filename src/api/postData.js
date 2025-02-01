@@ -88,26 +88,6 @@ const deletePost = (id) =>
       .catch(reject);
   });
 
-// GET A SINGLE POST'S COMMENTS
-// const getPostCommemnts = (firebaseKey) =>
-//   new Promise((resolve, reject) => {
-//     fetch(`${endpoint}/posts.json?orderBy="uid"&equalTo="${uid}"`, {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//       .then((response) => response.json())
-//       .then((data) => resolve(Object.values(data)))
-//       .catch(reject);
-//   });
+/// SEARCH BAR FOR POSTS BY COUNTRY ///
 
-export {
-  getPosts,
-  getAllPosts,
-  createPost,
-  getSinglePost,
-  deletePost,
-  updatePost,
-  // getPostCommemnts
-};
+export { getPosts, getAllPosts, createPost, getSinglePost, deletePost, updatePost };

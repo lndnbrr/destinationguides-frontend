@@ -62,4 +62,18 @@ const deleteComment = (id) =>
       .catch(reject);
   });
 
-export { createComment, getComment, updateComment, deleteComment };
+// COMMENTS USING POST ID
+const getCommentsUsingId = (id) =>
+  new Promise((resolve, reject) => {
+    fetch(`${dbURL}/comments?posts=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(Object.values(data)))
+      .catch(reject);
+  });
+
+export { createComment, getComment, updateComment, deleteComment, getCommentsUsingId };

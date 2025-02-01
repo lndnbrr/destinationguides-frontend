@@ -21,7 +21,7 @@ const initialState = {
   country: '',
   region: '',
   image: '',
-  tags: '',
+  tags: [],
 };
 
 function PostForm({ obj }) {
@@ -92,16 +92,6 @@ function PostForm({ obj }) {
         </Form.Select>
       </FloatingLabel>
 
-      {/* BODY INPUT */}
-      <FloatingLabel controlId="floatingInput4" label="Body" className="mb-3">
-        <Form.Control type="text" placeholder="Enter description" name="post_body" value={formInput.body} onChange={handleChange} required />
-      </FloatingLabel>
-
-      {/* CATEGORY INPUT  */}
-      <FloatingLabel controlId="floatingInput5" label="Category" className="mb-3">
-        <Form.Control type="text" placeholder="Enter category" name="category" value={formInput.category} onChange={handleChange} required />
-      </FloatingLabel>
-
       {/* REGION INPUT  */}
       <FloatingLabel controlId="floatingInput6" label="Region" className="mb-3">
         <Form.Select controlId="dropdown2" type="text" placeholder="Enter region" name="region" value={formInput.region} onChange={handleChange} required>
@@ -114,16 +104,31 @@ function PostForm({ obj }) {
         </Form.Select>
       </FloatingLabel>
 
+      {/* BODY INPUT */}
+      <FloatingLabel controlId="floatingInput4" label="Body" className="mb-3">
+        <Form.Control type="text" placeholder="Enter description" name="body" value={formInput.body} onChange={handleChange} required />
+      </FloatingLabel>
+
+      {/* CATEGORY INPUT  */}
+      <FloatingLabel controlId="floatingInput5" label="Category" className="mb-3">
+        <Form.Control type="text" placeholder="Enter category" name="category" value={formInput.category} onChange={handleChange} required />
+      </FloatingLabel>
+
       {/* IMAGE INPUT  */}
-      <FloatingLabel controlId="floatingInput7" label="Author Image" className="mb-3">
+      <FloatingLabel controlId="floatingInput7" label="Post Image" className="mb-3">
         <Form.Control type="url" placeholder="Enter an image url" name="image" value={formInput.image} onChange={handleChange} required />
       </FloatingLabel>
+
+      {/* ///// ADD TAG FEATURE HERE???? ////// */}
+      <Form.Label>
+        <p>Tags</p>
+      </Form.Label>
+      <Form.Control type="name" placeholder="Add Tags" />
+      <Form.Text className="text-muted">Add tags that best fit the content of this post.</Form.Text>
 
       {/* SUBMIT BUTTON */}
       <Button type="submit">{obj.id ? 'Update' : 'Create'} Post</Button>
     </Form>
-
-    /// // ADD TAG FEATURE HERE???? //////
   );
 }
 

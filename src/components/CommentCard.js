@@ -5,7 +5,7 @@ import { Button, Card } from 'react-bootstrap';
 import deleteComment from '../api/commentData';
 
 export default function CommentCard() {
-// insert obj when applicable
+  // insert obj when applicable
   const removeComment = (remainingComments) => {
     deleteComment().then(() => remainingComments);
     // insert obj when applicable
@@ -32,7 +32,7 @@ export default function CommentCard() {
         <Button variant="danger" type="button" onClick={removeComment}>
           Delete
         </Button>
-        <Card.Text className="mt-1 text-muted">TimeStamp</Card.Text>
+        {/* <Card.Text className="mt-1 text-muted">TimeStamp</Card.Text> */}
       </Card.Body>
     </Card>
   );

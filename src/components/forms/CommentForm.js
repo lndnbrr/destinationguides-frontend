@@ -47,9 +47,9 @@ function CommentForm({ obj = intialState }) {
 
   return (
     <Form onSubmit={handleSubmit} className="text-black">
-      <Form.Label className="text-white">Create a Comment</Form.Label>
+      <Form.Label className="text-white">Leave a Comment</Form.Label>
       <Form.Group>
-        <FloatingLabel label="Comment" className="mb-3">
+        <FloatingLabel label="thoughts?" className="mb-3">
           <Form.Control
             placeholder="Comment"
             name="comment"
