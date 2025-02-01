@@ -19,6 +19,9 @@ function PostNavBar() {
             <Link className="nav-link" href="/">
               Home
             </Link>
+            <Link className="nav-link" href="/posts">
+              Posts
+            </Link>
             <RegionDropDown />
             <Link className="nav-link" href="/profile">
               Profile
