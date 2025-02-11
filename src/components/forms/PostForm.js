@@ -6,12 +6,14 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
+import CreatableSelect from 'react-select/creatable';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
 import { createPost, updatePost } from '../../api/postData';
 import { getRegion } from '../../api/regionData';
 import { getCountry } from '../../api/countryData';
+import { getAllTags } from '../../api/tagData';
 
 const initialState = {
   title: '',
@@ -28,12 +30,21 @@ function PostForm({ obj }) {
   const [formInput, setFormInput] = useState(initialState);
   const [regions, setRegions] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [newTags, setNewTags] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
     if (obj.id) setFormInput(obj);
   }, [obj, user]);
+
+  useEffect(() => {
+    if (obj?.id) {
+      setSelectedTags(obj.tags.map((tag) => ({ value: tag.id, label: tag.name })));
+    }
+  }, [obj]);
 
   useEffect(() => {
     getRegion().then(setRegions);
@@ -43,12 +54,31 @@ function PostForm({ obj }) {
     getCountry().then(setCountries);
   }, []);
 
+  useEffect(() => {
+    getAllTags().then(setTags);
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormInput((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleChangeForTags = (selectedOptions) => {
+    // loops through selected tags that exist in dropdown
+    const newTags = [];
+    const existingTags = [];
+    selectedOptions.forEach((tagSelection) => {
+      if (tagSelection) {
+        newTags.push({ value: tagSelection.value, label: tagSelection.name });
+      } else {
+        existingTags.push({ value: tagSelection.value, label: tagSelection.name });
+      }
+    });
+    setSelectedTags(existingTags);
+    setNewTags(newTags);
   };
 
   const handleSubmit = (e) => {
@@ -120,12 +150,18 @@ function PostForm({ obj }) {
       </FloatingLabel>
 
       {/* ///// ADD TAG FEATURE HERE???? ////// */}
-      <Form.Label>
-        <p>Tags</p>
-      </Form.Label>
-      <Form.Control type="name" placeholder="Add Tags" />
-      <Form.Text className="text-muted">Add tags that best fit the content of this post.</Form.Text>
-
+      <CreatableSelect
+        name="tags"
+        isMulti
+        value={[...selectedTags, ...newTags]}
+        onChange=// 'value' is the array of selected tags & combines both selectedTags (existing tags) and newTags (tags created dynamically).
+        {handleChangeForTags}
+        placeholder="Add tags for this post"
+        options={tags.map((tag) => ({
+          value: tag.id,
+          label: tag.name,
+        }))}
+      />
       {/* SUBMIT BUTTON */}
       <Button type="submit">{obj.id ? 'Update' : 'Create'} Post</Button>
     </Form>
@@ -142,9 +178,14 @@ PostForm.propTypes = {
     body: PropTypes.string,
     country: PropTypes.number,
     region: PropTypes.number,
-    tags: PropTypes.string,
     created_at: PropTypes.string,
   }),
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  ),
 };
 
 PostForm.defaultProps = {

@@ -38,7 +38,7 @@ function PostCard({ postObj, onUpdate }) {
 
         {user?.uid === postObj?.author?.uid ? (
           <Link href={`/post/edit/${postObj.id}`} passHref>
-            <Button variant="success">Edit</Button>
+            <Button variant="primary">Edit</Button>
           </Link>
         ) : (
           ''
