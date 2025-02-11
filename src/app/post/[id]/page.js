@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Carousel } from 'react-bootstrap';
-// import Link from "next/link";
 import CommentCard from '../../../components/CommentCard';
 import CommentForm from '../../../components/forms/CommentForm';
 import { getCommentsUsingId } from '../../../api/commentData';
@@ -14,14 +13,11 @@ const initialState = {
   author: '',
   category: '',
   body: '',
-  tags: '',
+  tags: [],
 };
 export default function ViewPost({ params }) {
   const { id } = params;
-  const postId = Number(id);
-
-  const [postDetails, setPostDetails] = useState({});
-
+  const [postDetails, setPostDetails] = useState(initialState);
   const [comments, setComments] = useState([]);
 
   const getThePost = () => {
@@ -34,7 +30,7 @@ export default function ViewPost({ params }) {
   useEffect(() => {
     getThePost();
     getPostComments();
-  }, [postId, getThePost, getPostComments]);
+  }, [id]);
 
   return (
     <div className="mt-5 d-flex flex-wrap">
@@ -43,9 +39,9 @@ export default function ViewPost({ params }) {
           <h2>{postDetails.title}</h2>
           <h3>{postDetails.category}</h3>
           <p>Post Description: {postDetails.body || ''}</p>
-          <p>Tags: {postDetails.tags?.map((tag, index) => (index === postDetails.tags.length - 1 ? tag.name : `${tag.name}, `))}</p>
+          <p>🏷️: {postDetails.tags?.map((tag, index) => (index === postDetails.tags.length - 1 ? tag.name : `${tag.name}, `))}</p>
           <div>
-            <p>Comments</p>
+            <p>💬:</p>
             <Carousel interval={3000} style={{ width: '400px', margin: 'auto' }}>
               {comments.map((comment) => (
                 <Carousel.Item key={comment.id}>
@@ -55,7 +51,7 @@ export default function ViewPost({ params }) {
             </Carousel>
             <Card style={{ width: '400px', margin: '15px', backgroundColor: 'black', padding: '10px' }}>
               <Card.Body>
-                <CommentForm commentPostId={postId} onSubmit={getCommentsUsingId} />
+                <CommentForm commentPostId={id} onSubmit={getPostComments} />
               </Card.Body>
             </Card>{' '}
           </div>
@@ -74,7 +70,12 @@ ViewPost.propTypes = {
     author: PropTypes.string,
     category: PropTypes.string,
     body: PropTypes.string,
-    tags: PropTypes.arrayOf(PropTypes.string),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+      }),
+    ),
   }),
 };
 
