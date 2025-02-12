@@ -2,20 +2,6 @@ import { clientCredentials } from '../utils/client';
 
 const endpoint = clientCredentials.databaseURL;
 
-// GET POSTS
-const getPosts = (uid) =>
-  new Promise((resolve, reject) => {
-    fetch(`${endpoint}/posts?uid=${uid}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => resolve(Object.values(data)))
-      .catch(reject);
-  });
-
 // GET ALL POSTS
 const getAllPosts = () =>
   new Promise((resolve, reject) => {
@@ -33,7 +19,7 @@ const getAllPosts = () =>
 // GET SINGLE POST
 const getSinglePost = (id) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/posts/${id}.json`, {
+    fetch(`${endpoint}/posts/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -44,10 +30,38 @@ const getSinglePost = (id) =>
       .catch(reject);
   });
 
+// GET POSTS BY AUTHOR
+const getPostsByAuthor = (uid) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/posts?author=${uid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(Object.values(data)))
+      .catch(reject);
+  });
+
+// GET POSTS BY COUNTRY
+const getPostByCountry = (pk) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/posts?country=${pk}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(Object.values(data)))
+      .catch(reject);
+  });
+
 // CREATE POST
 const createPost = (payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/posts.json`, {
+    fetch(`${endpoint}/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,8 +76,8 @@ const createPost = (payload) =>
 // UPDATE POST
 const updatePost = (payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/posts/${payload.id}.json`, {
-      method: 'PATCH',
+    fetch(`${endpoint}/posts/${payload.id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -90,4 +104,4 @@ const deletePost = (id) =>
 
 /// SEARCH BAR FOR POSTS BY COUNTRY ///
 
-export { getPosts, getAllPosts, createPost, getSinglePost, deletePost, updatePost };
+export { getPostsByAuthor, getAllPosts, createPost, getSinglePost, deletePost, updatePost, getPostByCountry };

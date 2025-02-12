@@ -21,6 +21,25 @@ const getCountry = () =>
       .catch(reject);
   });
 
+const getCountryByRegion = (country) =>
+  new Promise((resolve, reject) => {
+    fetch(`${dbURL}/countries?region=${country}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          resolve(Object.values(data));
+        } else {
+          resolve([]);
+        }
+      })
+      .catch(reject);
+  });
+
 const createCountry = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/countries`, {
@@ -38,7 +57,7 @@ const createCountry = (payload) =>
 const updateCountry = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/countries/${payload.id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       header: {
         'Content-Type': 'application/json',
       },
@@ -62,4 +81,4 @@ const deleteCountry = (id) =>
       .catch(reject);
   });
 
-export { createCountry, getCountry, updateCountry, deleteCountry };
+export { createCountry, getCountry, getCountryByRegion, updateCountry, deleteCountry };

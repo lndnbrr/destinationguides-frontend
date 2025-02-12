@@ -2,7 +2,6 @@
 
 import { useAuth } from '@/utils/context/authContext';
 import { useState, useEffect } from 'react';
-// import CommentCard from '../components/CommentCard';
 import PostCard from '../components/PostCard';
 import { getAllPosts } from '../api/postData';
 
@@ -33,7 +32,6 @@ function Home() {
         </h1>
         <h1>Welcome to the ultimate destination guide!</h1>
       </div>
-      {/* <CommentCard /> */}
       <div style={{ border: '3px solid green', padding: '45px 0px 45px 0px' }}>
         <div className="d-flex flex-wrap justify-content-evenly">
           {featPosts.slice(0, 3).map((imagePOst) => (

@@ -6,21 +6,16 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Link from 'next/link';
 import { deletePost } from '../api/postData';
-import { useAuth } from '../utils/context/authContext';
 
 function PostCard({ postObj, onUpdate }) {
   const deleteSinglePost = () => {
     if (window.confirm(`Delete ${postObj.title}?`)) {
-      deletePost(postObj.id).then(() => onUpdate());
+      deletePost(postObj.pk).then(() => onUpdate());
     }
   };
 
-  const { user } = useAuth;
-
   return (
-    <Card
-    // style={{ marginLeft: '15px', marginRight: '15px' }}
-    >
+    <Card>
       <Card.Img variant="top" src={postObj.image} alt={postObj.title} style={{ height: '300px' }} />
       <Card.Body>
         <Card.Title>{postObj.title}</Card.Title>
@@ -29,20 +24,17 @@ function PostCard({ postObj, onUpdate }) {
 
         {/* TAGS HERE MAYBE?????? */}
 
-        <Link href={`/post/${postObj.id}`} passHref>
+        <Link href={`/post/${postObj.pk}`} passHref>
           <Button variant="primary" className="m-2">
             VIEW
           </Button>
         </Link>
-        {/* EDIT POST DETAILS  */}
 
-        {user?.uid === postObj?.author?.uid ? (
-          <Link href={`/post/edit/${postObj.id}`} passHref>
-            <Button variant="primary">Edit</Button>
-          </Link>
-        ) : (
-          ''
-        )}
+        {/* EDIT POST DETAILS  */}
+        <Link href={`/post/edit/${postObj.id}`} passHref>
+          <Button variant="primary">Edit</Button>
+        </Link>
+
         {/* TEMP DELETE BUTTON */}
         <Button variant="danger" onClick={deleteSinglePost} className="m-2">
           DELETE
@@ -57,14 +49,15 @@ function PostCard({ postObj, onUpdate }) {
 
 PostCard.propTypes = {
   postObj: PropTypes.shape({
-    id: PropTypes.number,
+    pk: PropTypes.number,
+    id: PropTypes.string,
     title: PropTypes.string,
-    author: PropTypes.string,
-    category: PropTypes.string,
+    author: PropTypes.number,
+    category: PropTypes.number,
     body: PropTypes.string,
     image: PropTypes.string,
-    country: PropTypes.string,
-    region: PropTypes.string,
+    country: PropTypes.number,
+    region: PropTypes.number,
     tags: PropTypes.string,
     created_at: PropTypes.string,
   }).isRequired,
@@ -72,5 +65,3 @@ PostCard.propTypes = {
 };
 
 export default PostCard;
-
-// textAlign: 'center', color: '#DDA11E', fontSize: '14px'
