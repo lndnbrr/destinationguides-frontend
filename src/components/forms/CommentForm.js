@@ -50,14 +50,7 @@ function CommentForm({ obj = intialState }) {
       <Form.Label className="text-white">Leave a Comment</Form.Label>
       <Form.Group>
         <FloatingLabel label="thoughts?" className="mb-3">
-          <Form.Control
-            placeholder="Comment"
-            name="comment"
-            // value={comment.text}
-            onChange={handleChange}
-            as="textarea"
-            rows={3}
-          />
+          <Form.Control placeholder="Comment" name="comment" onChange={handleChange} as="textarea" rows={3} />
         </FloatingLabel>
         <Button variant="success">Submit Comment</Button>
       </Form.Group>

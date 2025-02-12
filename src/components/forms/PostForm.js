@@ -9,36 +9,41 @@ import Button from 'react-bootstrap/Button';
 import CreatableSelect from 'react-select/creatable';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
-import { useAuth } from '../../utils/context/authContext';
-import { createPost, updatePost } from '../../api/postData';
+import { useAuth } from '@/utils/context/authContext';
+import { createPost, updatePost } from '@/api/postData';
+import { getCountryByRegion } from '@/api/countryData';
+import getCategories from '@/api/categoryData';
 import { getRegion } from '../../api/regionData';
-import { getCountry } from '../../api/countryData';
 import { getAllTags } from '../../api/tagData';
 
 const initialState = {
   title: '',
-  author: '',
-  category: '',
+  author: {},
+  category: {},
   body: '',
-  country: '',
-  region: '',
+  country: {},
+  region: {},
   image: '',
   tags: [],
 };
 
-function PostForm({ obj }) {
-  const [formInput, setFormInput] = useState(initialState);
+function PostForm({ obj = initialState }) {
+  const { user } = useAuth();
+  const [formInput, setFormInput] = useState(obj);
+  const [categories, setCategories] = useState([]);
   const [regions, setRegions] = useState([]);
   const [countries, setCountries] = useState([]);
-  const [newTags, setNewTags] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const router = useRouter();
-  const { user } = useAuth();
 
   useEffect(() => {
-    if (obj.id) setFormInput(obj);
-  }, [obj, user]);
+    if (obj.id) setFormInput({ ...obj, author: obj.author.uid, category: obj.category.id, country: obj.country.id, region: obj.region.id, tags: obj.tags.id });
+  }, [obj]);
+
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
 
   useEffect(() => {
     if (obj?.id) {
@@ -51,8 +56,12 @@ function PostForm({ obj }) {
   }, []);
 
   useEffect(() => {
-    getCountry().then(setCountries);
+    getAllTags().then(setTags);
   }, []);
+
+  useEffect(() => {
+    getCountryByRegion(formInput.region).then(setCountries);
+  }, [formInput.region]);
 
   useEffect(() => {
     getAllTags().then(setTags);
@@ -67,33 +76,34 @@ function PostForm({ obj }) {
   };
 
   const handleChangeForTags = (selectedOptions) => {
-    // loops through selected tags that exist in dropdown
-    const newTags = [];
     const existingTags = [];
     selectedOptions.forEach((tagSelection) => {
-      if (tagSelection) {
-        newTags.push({ value: tagSelection.value, label: tagSelection.name });
-      } else {
-        existingTags.push({ value: tagSelection.value, label: tagSelection.name });
-      }
+      existingTags.push({ value: tagSelection.value, label: tagSelection.label });
     });
     setSelectedTags(existingTags);
-    setNewTags(newTags);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const tagIds = selectedTags.map((tag) => tag.value);
+    const payload = { ...formInput, author: user.uid, tags: tagIds };
     if (obj.id) {
-      updatePost(formInput).then(() => router.push('/posts'));
+      updatePost(payload).then(() => router.push(`/profile/${user.uid}`));
     } else {
-      const payload = { ...formInput, uid: user.uid };
-      createPost(payload).then(({ name }) => {
-        const patchPayload = { id: name };
-        updatePost(patchPayload).then(() => {
-          router.push('/posts');
-        });
+      createPost(payload).then(() => {
+        router.push(`/profile/${user.uid}`);
       });
     }
+  };
+
+  const dropdownText = {
+    control: (styles) => ({ ...styles }),
+    option: (styles) => {
+      return {
+        ...styles,
+        color: 'black',
+      };
+    },
   };
 
   return (
@@ -105,26 +115,9 @@ function PostForm({ obj }) {
         <Form.Control type="text" placeholder="Enter tile of post" name="title" value={formInput.title} onChange={handleChange} required />
       </FloatingLabel>
 
-      {/* AUTHOR (creator of post) */}
-      <FloatingLabel controlId="floatingInput2" label="Author Name" className="mb-3">
-        <Form.Control type="text" placeholder="Enter Name" name="author" value={formInput.author} onChange={handleChange} required />
-      </FloatingLabel>
-
-      {/* COUNTRY INPUT  */}
-      <FloatingLabel controlId="floatingInput3" label="Country" className="mb-3">
-        <Form.Select controlId="dropdown1" type="text" placeholder="Enter country" name="country" value={formInput.country} onChange={handleChange} required>
-          <option></option>
-          {countries.map((country) => (
-            <option key={country.id} value={country.id}>
-              {country.name}
-            </option>
-          ))}
-        </Form.Select>
-      </FloatingLabel>
-
       {/* REGION INPUT  */}
       <FloatingLabel controlId="floatingInput6" label="Region" className="mb-3">
-        <Form.Select controlId="dropdown2" type="text" placeholder="Enter region" name="region" value={formInput.region} onChange={handleChange} required>
+        <Form.Select controlId="dropdown1" type="text" placeholder="Enter region" name="region" value={formInput.region} onChange={handleChange} required>
           <option></option>
           {regions.map((region) => (
             <option key={region.id} value={region.id}>
@@ -134,14 +127,17 @@ function PostForm({ obj }) {
         </Form.Select>
       </FloatingLabel>
 
-      {/* BODY INPUT */}
-      <FloatingLabel controlId="floatingInput4" label="Body" className="mb-3">
-        <Form.Control type="text" placeholder="Enter description" name="body" value={formInput.body} onChange={handleChange} required />
-      </FloatingLabel>
+      {/* COUNTRY INPUT  */}
+      <FloatingLabel controlId="floatingInput3" label="Country" className="mb-3">
+        <Form.Select controlId="dropdown2" type="text" placeholder="Enter country" name="country" value={formInput.country} onChange={handleChange} required>
+          <option></option>
 
-      {/* CATEGORY INPUT  */}
-      <FloatingLabel controlId="floatingInput5" label="Category" className="mb-3">
-        <Form.Control type="text" placeholder="Enter category" name="category" value={formInput.category} onChange={handleChange} required />
+          {countries.map((country) => (
+            <option key={country.id} value={country.id}>
+              {country.name}
+            </option>
+          ))}
+        </Form.Select>
       </FloatingLabel>
 
       {/* IMAGE INPUT  */}
@@ -149,21 +145,40 @@ function PostForm({ obj }) {
         <Form.Control type="url" placeholder="Enter an image url" name="image" value={formInput.image} onChange={handleChange} required />
       </FloatingLabel>
 
-      {/* ///// ADD TAG FEATURE HERE???? ////// */}
+      {/* BODY INPUT */}
+      <FloatingLabel controlId="floatingInput4" label="Body" className="mb-3">
+        <Form.Control type="text" placeholder="Enter description" name="body" value={formInput.body} style={{ height: '190px' }} onChange={handleChange} required />
+      </FloatingLabel>
+
+      {/* CATEGORY INPUT  */}
+      <FloatingLabel controlId="floatingInput5" label="Category" className="mb-3">
+        <Form.Select controlId="dropdown3" type="text" placeholder="Enter a category" name="category" value={formInput.category} onChange={handleChange} required>
+          <option></option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </Form.Select>
+      </FloatingLabel>
+
+      {/* TAG FEATURE */}
       <CreatableSelect
         name="tags"
         isMulti
-        value={[...selectedTags, ...newTags]}
-        onChange=// 'value' is the array of selected tags & combines both selectedTags (existing tags) and newTags (tags created dynamically).
-        {handleChangeForTags}
+        value={selectedTags}
+        onChange={handleChangeForTags}
         placeholder="Add tags for this post"
+        styles={dropdownText}
         options={tags.map((tag) => ({
           value: tag.id,
           label: tag.name,
         }))}
       />
       {/* SUBMIT BUTTON */}
-      <Button type="submit">{obj.id ? 'Update' : 'Create'} Post</Button>
+      <div>
+        <Button type="submit">{obj.id ? 'Update' : 'Create'} Post</Button>
+      </div>
     </Form>
   );
 }
@@ -172,12 +187,37 @@ PostForm.propTypes = {
   obj: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
-    author: PropTypes.number,
-    category: PropTypes.number,
+    author: PropTypes.shape({
+      id: PropTypes.number,
+      username: PropTypes.string,
+      first_name: PropTypes.string,
+      last_name: PropTypes.string,
+      bio: PropTypes.string,
+      uid: PropTypes.string,
+      is_admin: PropTypes.bool,
+      is_author: PropTypes.bool,
+    }),
+    category: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
     image: PropTypes.string,
     body: PropTypes.string,
-    country: PropTypes.number,
-    region: PropTypes.number,
+    country: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      region: PropTypes.number,
+    }),
+    region: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+      }),
+    ),
     created_at: PropTypes.string,
   }),
   tags: PropTypes.arrayOf(

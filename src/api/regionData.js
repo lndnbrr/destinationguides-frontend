@@ -38,7 +38,7 @@ const createRegion = (payload) =>
 const updateRegion = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/regions/${payload.id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       header: {
         'Content-Type': 'application/json',
       },
