@@ -37,7 +37,6 @@ export default function ProfilePage() {
     getSingleUser(user.uid).then(setUsers);
   };
 
-  // make the call to the API to get all the posts on component render
   useEffect(() => {
     getAllThePosts();
   }, []);
@@ -67,7 +66,6 @@ export default function ProfilePage() {
         </Link>
       </div>
       <div className="d-flex flex-wrap">
-        {/* map over posts here using PostCard component */}
         {posts.map((post) => (
           <PostCard key={post.id} postObj={post} onUpdate={getAllThePosts} />
         ))}
