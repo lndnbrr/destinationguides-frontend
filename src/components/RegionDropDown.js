@@ -26,7 +26,7 @@ export default function RegionDropDown() {
             {countries
               .filter((country) => country.region === region.id)
               .map((country) => (
-                <Dropdown.Item href={`country/${country.id}`}>{country.name}</Dropdown.Item>
+                <Dropdown.Item href={`/country/${country.id}`}>{country.name}</Dropdown.Item>
               ))}
           </DropdownButton>
         ))}

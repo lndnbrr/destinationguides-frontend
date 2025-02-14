@@ -10,7 +10,7 @@ import { deletePost } from '../api/postData';
 function PostCard({ postObj, onUpdate }) {
   const deleteSinglePost = () => {
     if (window.confirm(`Delete ${postObj.title}?`)) {
-      deletePost(postObj.pk).then(() => onUpdate());
+      deletePost(postObj.id).then(() => onUpdate());
     }
   };
 
@@ -22,9 +22,8 @@ function PostCard({ postObj, onUpdate }) {
         <Card.Subtitle>{postObj.category.name}</Card.Subtitle>
         <Card.Text>By {postObj.author.username}</Card.Text>
 
-        {/* TAGS HERE MAYBE?????? */}
-
-        <Link href={`/post/${postObj.pk}`} passHref>
+        {/* VIEW POST DETAILS  */}
+        <Link href={`/post/${postObj.id}`} passHref>
           <Button variant="primary" className="m-2">
             VIEW
           </Button>
@@ -32,7 +31,7 @@ function PostCard({ postObj, onUpdate }) {
 
         {/* EDIT POST DETAILS  */}
         <Link href={`/post/edit/${postObj.id}`} passHref>
-          <Button variant="primary">Edit</Button>
+          <Button variant="warning">Edit</Button>
         </Link>
 
         {/* TEMP DELETE BUTTON */}
@@ -49,7 +48,6 @@ function PostCard({ postObj, onUpdate }) {
 
 PostCard.propTypes = {
   postObj: PropTypes.shape({
-    pk: PropTypes.number,
     id: PropTypes.string,
     title: PropTypes.string,
     author: PropTypes.number,

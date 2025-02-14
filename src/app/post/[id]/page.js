@@ -37,23 +37,31 @@ export default function ViewPost({ params }) {
       <div className="text-white ms-5 details">
         <div className="text-white ms-5 details" style={{ width: '400px' }}>
           <h2>{postDetails.title}</h2>
-          <h3>{postDetails.category}</h3>
-          <p>Post Description: {postDetails.body || ''}</p>
+          <h3>
+            By {postDetails.author.first_name} {postDetails.author.last_name}
+          </h3>
+          <h3>Category Type: {postDetails.category.name}</h3>
+          <h3>Post Description: </h3>
+          <p>{postDetails.body || ''}</p>
           <p>🏷️: {postDetails.tags?.map((tag, index) => (index === postDetails.tags.length - 1 ? tag.name : `${tag.name}, `))}</p>
           <div>
             <p>💬:</p>
+
             <Carousel interval={3000} style={{ width: '400px', margin: 'auto' }}>
-              {comments.map((comment) => (
-                <Carousel.Item key={comment.id}>
-                  <CommentCard commentObj={comment} onUpdate={getPostComments} />
-                </Carousel.Item>
-              ))}
+              {comments
+                .filter((comment) => comment.post === postDetails.id)
+                .map((comment) => (
+                  <Carousel.Item key={comment.id}>
+                    <CommentCard commentObj={comment} onUpdate={getPostComments} />
+                  </Carousel.Item>
+                ))}
             </Carousel>
+
             <Card style={{ width: '400px', margin: '15px', backgroundColor: 'black', padding: '10px' }}>
               <Card.Body>
                 <CommentForm commentPostId={id} onSubmit={getPostComments} />
               </Card.Body>
-            </Card>{' '}
+            </Card>
           </div>
         </div>
       </div>

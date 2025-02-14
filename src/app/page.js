@@ -34,9 +34,9 @@ function Home() {
       </div>
       <div style={{ border: '3px solid green', padding: '45px 0px 45px 0px' }}>
         <div className="d-flex flex-wrap justify-content-evenly">
-          {featPosts.slice(0, 3).map((imagePOst) => (
+          {featPosts.slice(0, 3).map((imagePost) => (
             <div>
-              <PostCard key={imagePOst.id} postObj={imagePOst} onUpdate={showFeatPosts} />
+              <PostCard key={imagePost.id} postObj={imagePost} onUpdate={showFeatPosts} />
             </div>
           ))}
         </div>

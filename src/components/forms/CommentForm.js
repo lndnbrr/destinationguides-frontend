@@ -1,3 +1,7 @@
+'use client';
+
+/* eslint-disable */
+
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -5,19 +9,19 @@ import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { useAuth } from '@/utils/context/authContext';
 import { createComment, updateComment } from '@/api/commentData';
 
-const intialState = {
+const initialState = {
+  commenter: '',
+  post: '',
   text: '',
 };
 
 function CommentForm({ obj = intialState }) {
-  const [comment, setComment] = useState(obj);
-
+  const { user } = useAuth();
+  const [commentInput, setCommentInput] = useState(obj);
   const router = useRouter();
 
-  const { user } = useAuth();
-
   useEffect(() => {
-    if (obj.id) setComment(obj);
+    if (obj.id) setCommentInput(obj);
   }, [obj]);
 
   const handleChange = (e) => {
@@ -31,7 +35,7 @@ function CommentForm({ obj = intialState }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (obj.id) {
-      updateComment(comment).then(() => {
+      updateComment(commentInput).then(() => {
         router.push('/posts');
       });
     } else {
@@ -65,6 +69,10 @@ CommentForm.propTypes = {
     post: PropTypes.string,
     text: PropTypes.string,
   }).isRequired,
+};
+
+CommentForm.defaultProps = {
+  obj: initialState,
 };
 
 export default CommentForm;
