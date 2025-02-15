@@ -33,7 +33,7 @@ const getSingleUserTags = (uid) =>
 // GET A SINGLE TAG
 const getSingleTag = (id) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/tags/${id}.json`, {
+    fetch(`${endpoint}/tags/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const getSingleTag = (id) =>
 // CREATE TAG
 const createTag = (payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/tags.json`, {
+    fetch(`${endpoint}/tags`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const createTag = (payload) =>
 // UPDATE TAG
 const updateTag = (payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/tags/${payload.id}.json`, {
+    fetch(`${endpoint}/tags/${payload.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

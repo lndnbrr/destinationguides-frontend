@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Link from 'next/link';
 import { deletePost } from '../api/postData';
+import { useAuth } from '../utils/context/authContext';
 
 function PostCard({ postObj, onUpdate }) {
   const deleteSinglePost = () => {
@@ -13,6 +14,8 @@ function PostCard({ postObj, onUpdate }) {
       deletePost(postObj.id).then(() => onUpdate());
     }
   };
+
+  const { user } = useAuth();
 
   return (
     <Card>
@@ -29,15 +32,18 @@ function PostCard({ postObj, onUpdate }) {
           </Button>
         </Link>
 
-        {/* EDIT POST DETAILS  */}
-        <Link href={`/post/edit/${postObj.id}`} passHref>
-          <Button variant="warning">Edit</Button>
-        </Link>
-
-        {/* TEMP DELETE BUTTON */}
-        <Button variant="danger" onClick={deleteSinglePost} className="m-2">
-          DELETE
-        </Button>
+        {user.uid === postObj.author.uid ? (
+          <>
+            <Link href={`/post/edit/${postObj.id}`} passHref>
+              <Button variant="warning">Edit</Button>
+            </Link>
+            <Button variant="danger" onClick={deleteSinglePost} className="m-2">
+              DELETE
+            </Button>
+          </>
+        ) : (
+          <div> </div>
+        )}
       </Card.Body>
       <Card.Footer>
         <small className="text-muted">Created on {postObj.created_at}</small>
@@ -50,7 +56,16 @@ PostCard.propTypes = {
   postObj: PropTypes.shape({
     id: PropTypes.string,
     title: PropTypes.string,
-    author: PropTypes.number,
+    author: PropTypes.shape({
+      id: PropTypes.number,
+      username: PropTypes.string,
+      first_name: PropTypes.string,
+      last_name: PropTypes.string,
+      bio: PropTypes.string,
+      uid: PropTypes.string,
+      is_admin: PropTypes.bool,
+      is_author: PropTypes.bool,
+    }),
     category: PropTypes.number,
     body: PropTypes.string,
     image: PropTypes.string,

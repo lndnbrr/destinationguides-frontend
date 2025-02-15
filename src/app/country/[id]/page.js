@@ -28,18 +28,25 @@ function CountryDisplayPage() {
   }, [id]);
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {countriesPosts.length > 0 ? (
-        <div>Welcome to {wCountriesPosts[1]}!</div>
+        <>
+          <h1>Welcome to {wCountriesPosts[1]}!</h1>
+          <h1>Check Out the posts below!</h1>
+          <div>
+            {' '}
+            {countriesPosts.map((post) => (
+              <PostCard key={post.id} postObj={post} onUpdate={postCountry} />
+            ))}{' '}
+          </div>
+        </>
       ) : (
         <>
-          <div>Welcome to {wCountriesPosts[1]}!</div>
+          <h1>Welcome to {wCountriesPosts[1]}!</h1>
           <div>Please Make a Post to view!</div>
         </>
       )}
-      {countriesPosts.map((post) => (
-        <PostCard key={post.id} postObj={post} onUpdate={postCountry} />
-      ))}
     </>
   );
 }
