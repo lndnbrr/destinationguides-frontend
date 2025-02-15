@@ -65,7 +65,7 @@ export default function ViewPost({ params }) {
 
           <Card style={{ width: '400px', margin: '15px', backgroundColor: 'black', padding: '10px' }}>
             <Card.Body>
-              <CommentForm commentPostId={id} onSubmit={getPostComments} />
+              <CommentForm obj={{ post: id }} onUpdate={getPostComments} commentPostId={id} onSubmit={getPostComments} />
             </Card.Body>
           </Card>
         </div>

@@ -21,6 +21,20 @@ const getComment = () =>
       .catch(reject);
   });
 
+// GET SINGLE COMMENT
+const getSingleComment = (id) =>
+  new Promise((resolve, reject) => {
+    fetch(`${dbURL}/comments/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
 const createComment = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/comments`, {
@@ -42,7 +56,7 @@ const updateComment = (payload) =>
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.string(payload),
+      body: JSON.stringify(payload),
     })
       .then((response) => response.json())
       .then((data) => resolve(data))
@@ -57,7 +71,6 @@ const deleteComment = (id) =>
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
       .then((data) => resolve(data))
       .catch(reject);
   });
@@ -76,4 +89,4 @@ const getCommentsUsingId = (id) =>
       .catch(reject);
   });
 
-export { createComment, getComment, updateComment, deleteComment, getCommentsUsingId };
+export { createComment, getComment, getSingleComment, updateComment, deleteComment, getCommentsUsingId };

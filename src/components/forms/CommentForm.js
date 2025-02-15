@@ -15,14 +15,14 @@ const initialState = {
   text: '',
 };
 
-function CommentForm({ obj = intialState, onUpdate }) {
+function CommentForm({ obj = initialState, onUpdate }) {
   const { user } = useAuth();
   const [commentInput, setCommentInput] = useState(obj);
   const router = useRouter();
   const { id } = useParams();
 
   useEffect(() => {
-    if (obj.id) setCommentInput(obj);
+    if (obj.id) setCommentInput({ ...obj });
   }, [obj]);
 
   const handleChange = (e) => {
@@ -34,16 +34,17 @@ function CommentForm({ obj = intialState, onUpdate }) {
   };
 
   const handleSubmit = (e) => {
-    console.warn('here');
     e.preventDefault();
     if (obj.id) {
       updateComment(commentInput).then(() => {
-        router.push('/posts');
+        onUpdate();
+        router.push(`/post/${obj.post}`);
       });
     } else {
       const payload = { ...commentInput, commenter: user.uid, post: id };
       createComment(payload).then(() => {
         onUpdate();
+        setCommentInput({ ...initialState });
       });
     }
   };
@@ -55,9 +56,7 @@ function CommentForm({ obj = intialState, onUpdate }) {
         <FloatingLabel label="thoughts?" className="mb-3" controlId="floatingInputComment">
           <Form.Control placeholder="Comment" name="text" onChange={handleChange} as="textarea" value={commentInput.text} rows={3} />
         </FloatingLabel>
-        <Button type="submit" variant="success">
-          Submit Comment
-        </Button>
+        <Button type="submit">{obj.id ? 'Update' : 'Submit'} Comment</Button>
       </Form.Group>
     </Form>
   );
