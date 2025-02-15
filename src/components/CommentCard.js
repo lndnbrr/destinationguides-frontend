@@ -1,16 +1,14 @@
 'use client';
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button, Card } from 'react-bootstrap';
-import deleteComment from '../api/commentData';
-import { useAuth } from '../utils/context/authContext';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { deleteComment } from '../api/commentData';
 
 export default function CommentCard({ commentObj, onUpdate }) {
-  const { user } = useAuth();
-
-  const removeComment = () => {
-    if (window.confirm('Are you sure you want to delete this comment?')) {
+  const removeSingleComment = () => {
+    if (window.confirm(`Delete ${commentObj.text}?`)) {
       deleteComment(commentObj.id).then(() => onUpdate());
     }
   };
@@ -24,26 +22,25 @@ export default function CommentCard({ commentObj, onUpdate }) {
       }}
     >
       <Card.Body>
-        <Card.Subtitle>
-          {/* {commentObj.commenter.name} must find out what the name is */}
-          {commentObj.commenter.username}
-        </Card.Subtitle>
-        <Card.Text>{commentObj.text} </Card.Text>
+        <Card.Subtitle>{commentObj.commenter}</Card.Subtitle>
+        <Card.Text>{commentObj.text}</Card.Text>
 
-        {user.uid === commentObj.commenter.uid ? (
-          <>
-            <Button variant="warning" type="button">
-              Edit
-            </Button>
-            <Button variant="danger" type="button" onClick={removeComment}>
-              Delete
-            </Button>
-          </>
-        ) : (
-          <div> </div>
-        )}
-
-        {/* <Card.Text className="mt-1 text-muted">TimeStamp</Card.Text> IF POSSIBLE */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '10px',
+            marginTop: '10px',
+          }}
+        >
+          <Link href={`/comment/edit/${commentObj.id}`} passHref>
+            <Button variant="primary">Edit</Button>
+          </Link>
+          <Button variant="danger" type="button" onClick={removeSingleComment}>
+            Delete
+          </Button>
+        </div>
+        {/* <Card.Text className="mt-1 text-muted">TimeStamp</Card.Text> */}
       </Card.Body>
     </Card>
   );
@@ -51,18 +48,10 @@ export default function CommentCard({ commentObj, onUpdate }) {
 
 CommentCard.propTypes = {
   commentObj: PropTypes.shape({
+    pk: PropTypes.number,
     id: PropTypes.string,
     post: PropTypes.string,
-    commenter: PropTypes.shape({
-      id: PropTypes.number,
-      username: PropTypes.string,
-      first_name: PropTypes.string,
-      last_name: PropTypes.string,
-      bio: PropTypes.string,
-      uid: PropTypes.string,
-      is_admin: PropTypes.bool,
-      is_author: PropTypes.bool,
-    }),
+    commenter: PropTypes.string,
     text: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
