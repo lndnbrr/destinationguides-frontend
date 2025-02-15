@@ -1,32 +1,40 @@
-import PropTypes from 'prop-types';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
-import { createTag, getAllTags, updateTag } from '../../api/tagData';
+import { createTag, updateTag } from '../../api/tagData';
 
 const initialState = {
   id: '',
   name: '',
 };
 
-function TagForm({ obj, onSubmit }) {
-  const [formInput, setFormInput] = useState(initialState);
-  const [tags, setTags] = useState([]);
+function TagForm({ obj = initialState }) {
+  const [formInput, setFormInput] = useState(obj);
+  // const [tags, setTags] = useState([]);
   const { user } = useAuth();
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   if (obj.id) {
+  //     setFormInput(obj);
+  //   } else {
+  //     setFormInput(initialState);
+  //   }
+  // }, [obj]);
+
+  // useEffect(() => {
+  //   getAllTags(setTags);
+  // }, []);
 
   useEffect(() => {
-    if (obj.id) {
-      setFormInput(obj);
-    } else {
-      setFormInput(initialState);
-    }
+    if (obj.id) setFormInput(obj);
   }, [obj]);
 
-  useEffect(() => {
-    getAllTags(setTags);
-  }, []);
-
-  const handleChange = (e) => {
+  const handleChanges = (e) => {
     const { name, value } = e.target;
     setFormInput((prevState) => ({
       ...prevState,
@@ -37,14 +45,12 @@ function TagForm({ obj, onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (obj.id) {
-      updateTag(formInput).then(onSubmit);
+      updateTag(formInput).then(() => {
+        router.push(`/profile/${user.uid}`);
+      });
     } else {
-      const payload = {
-        name: obj.name,
-      };
-      createTag(user.id, payload).then(() => {
-        setFormInput(initialState);
-        onSubmit();
+      createTag(formInput).then(() => {
+        router.push(`/profile/${user.uid}`);
       });
     }
   };
@@ -52,10 +58,10 @@ function TagForm({ obj, onSubmit }) {
   return (
     <Form onSubmit={handleSubmit}>
       <h4 className="text-white mt-5">{obj.id ? 'Update' : 'Add'} Tag</h4>
-      <p>{tags}</p>
+      {/* <p>{tags}</p> */}
 
       <FloatingLabel controlId="floatingTextarea" label="new tag" className="mb-3">
-        <Form.Control as="textarea" placeholder="Add new tag" style={{ height: '200px', width: '400px' }} name="label" value={formInput.name} onChange={handleChange} required />
+        <Form.Control as="textarea" placeholder="Add new tag" style={{ height: '100px', width: '400px' }} name="name" value={formInput.name} onChange={handleChanges} required />
 
         {/* SUBMIT TAG */}
         <Button type="submit">{obj.id ? 'Update' : 'Add'} Tag</Button>
@@ -69,7 +75,7 @@ TagForm.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
   }),
-  onSubmit: PropTypes.func.isRequired,
+  // onSubmit: PropTypes.func.isRequired,
 };
 
 TagForm.defaultProps = {

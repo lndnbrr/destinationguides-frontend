@@ -63,10 +63,6 @@ function PostForm({ obj = initialState }) {
     getCountryByRegion(formInput.region).then(setCountries);
   }, [formInput.region]);
 
-  useEffect(() => {
-    getAllTags().then(setTags);
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormInput((prevState) => ({
@@ -147,7 +143,7 @@ function PostForm({ obj = initialState }) {
 
       {/* BODY INPUT */}
       <FloatingLabel controlId="floatingInput4" label="Body" className="mb-3">
-        <Form.Control type="text" placeholder="Enter description" name="body" value={formInput.body} style={{ height: '190px' }} onChange={handleChange} required />
+        <Form.Control as="textarea" placeholder="Enter description" name="body" value={formInput.body} style={{ height: '200px' }} onChange={handleChange} required />
       </FloatingLabel>
 
       {/* CATEGORY INPUT  */}

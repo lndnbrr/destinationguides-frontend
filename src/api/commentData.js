@@ -25,7 +25,7 @@ const createComment = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/comments`, {
       method: 'POST',
-      header: {
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
@@ -39,7 +39,7 @@ const updateComment = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/comments/${payload.id}`, {
       method: 'PATCH',
-      header: {
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.string(payload),
