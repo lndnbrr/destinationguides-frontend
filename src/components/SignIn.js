@@ -5,18 +5,17 @@ import { signIn } from '../utils/auth';
 function Signin() {
   return (
     <div
-      className="text-center d-flex flex-column justify-content-center align-content-center"
+      className=" d-flex flex-column justify-content-center align-content-center fade-in"
       style={{
-        height: '90vh',
-        padding: '30px',
-        maxWidth: '400px',
-        margin: '0 auto',
+        backgroundImage: 'url(/images/landing-background.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
       }}
     >
-      <h1>Hi there!</h1>
-      <p>Click the button below to login!</p>
-      <Button type="button" size="lg" className="copy-btn" onClick={signIn}>
-        Sign In
+      <h1 id="header-text">DESTINATION GUIDES</h1>
+      <Button type="button" size="lg" className="copy-btn" onClick={signIn} id="skeo-button">
+        SIGN IN
       </Button>
     </div>
   );
