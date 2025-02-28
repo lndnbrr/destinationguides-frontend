@@ -34,17 +34,18 @@ function CommentForm({ obj = initialState, onUpdate }) {
   };
 
   const handleSubmit = (e) => {
+    console.warn('here');
     e.preventDefault();
     if (obj.id) {
-      updateComment(commentInput).then(() => {
-        onUpdate();
-        router.push(`/post/${obj.post}`);
+      const payload = { ...commentInput, commenter: user.uid, post: obj.post.id, id: obj.id };
+      updateComment(payload).then(() => {
+        router.push(`/post/${obj.post.id}`);
       });
     } else {
       const payload = { ...commentInput, commenter: user.uid, post: id };
       createComment(payload).then(() => {
         onUpdate();
-        setCommentInput({ ...initialState });
+        setCommentInput(initialState);
       });
     }
   };
@@ -78,7 +79,7 @@ CommentForm.propTypes = {
     post: PropTypes.string,
     text: PropTypes.string,
   }).isRequired,
-  onUpdate: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func,
 };
 
 CommentForm.defaultProps = {

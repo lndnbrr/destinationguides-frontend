@@ -5,6 +5,7 @@ import { Button, Card } from 'react-bootstrap';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { deleteComment } from '../api/commentData';
+import { useAuth } from '../utils/context/authContext';
 
 export default function CommentCard({ commentObj, onUpdate }) {
   const removeSingleComment = () => {
@@ -12,6 +13,8 @@ export default function CommentCard({ commentObj, onUpdate }) {
       deleteComment(commentObj.id).then(() => onUpdate());
     }
   };
+
+  const { user } = useAuth();
 
   return (
     <Card
@@ -22,7 +25,7 @@ export default function CommentCard({ commentObj, onUpdate }) {
       }}
     >
       <Card.Body>
-        <Card.Subtitle>{commentObj.commenter}</Card.Subtitle>
+        <Card.Subtitle>{commentObj.commenter.username}</Card.Subtitle>
         <Card.Text>{commentObj.text}</Card.Text>
 
         <div
@@ -33,12 +36,16 @@ export default function CommentCard({ commentObj, onUpdate }) {
             marginTop: '10px',
           }}
         >
-          <Link href={`/comment/edit/${commentObj.id}`} passHref>
-            <Button variant="primary">Edit</Button>
-          </Link>
-          <Button variant="danger" type="button" onClick={removeSingleComment}>
-            Delete
-          </Button>
+          {commentObj.commenter.uid === user.uid ? (
+            <Link href={`/comment/edit/${commentObj.id}`} passHref>
+              <Button variant="primary">Edit</Button>
+              <Button variant="danger" type="button" onClick={removeSingleComment}>
+                Delete
+              </Button>
+            </Link>
+          ) : (
+            <div> </div>
+          )}
         </div>
         {/* <Card.Text className="mt-1 text-muted">TimeStamp</Card.Text> */}
       </Card.Body>
@@ -51,7 +58,16 @@ CommentCard.propTypes = {
     pk: PropTypes.number,
     id: PropTypes.string,
     post: PropTypes.string,
-    commenter: PropTypes.string,
+    commenter: PropTypes.shape({
+      id: PropTypes.number,
+      username: PropTypes.string,
+      first_name: PropTypes.string,
+      last_name: PropTypes.string,
+      bio: PropTypes.string,
+      uid: PropTypes.string,
+      is_admin: PropTypes.bool,
+      is_author: PropTypes.bool,
+    }),
     text: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,

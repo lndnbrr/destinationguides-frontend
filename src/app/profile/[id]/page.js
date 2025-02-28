@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import TagCard from '@/components/TagCard';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { getPostsByAuthor } from '../../../api/postData';
 import PostCard from '../../../components/PostCard';
 import { useAuth } from '../../../utils/context/authContext';
@@ -23,7 +23,7 @@ const initialState = [
   },
 ];
 
-export default function ProfilePage({ tagObj }) {
+export default function ProfilePage() {
   const { user } = useAuth();
 
   // set a state for posts
@@ -68,11 +68,12 @@ export default function ProfilePage({ tagObj }) {
     </div>
   ) : (
     <>
-      <h1>{users[0]?.username}</h1>
+      <h1>Username: {users[0]?.username}</h1>
       <h1>
-        {users[0]?.first_name} {users[0]?.last_name}
+        {' '}
+        Full Name: {users[0]?.first_name} {users[0]?.last_name}
       </h1>
-      <h1>{users[0]?.bio}</h1>
+      <h1>Bio: {users[0]?.bio}</h1>
       <div>{users[0]?.is_author === true ? <h1>Accredited Author</h1> : <h1>General User</h1>}</div>
 
       <div className="text-center my-4">
@@ -81,25 +82,30 @@ export default function ProfilePage({ tagObj }) {
             <Button>Create A Post</Button>
           </Link>
         ) : (
-          <h1> 'not applicable' </h1>
+          <h1> </h1>
         )}
       </div>
-
-      <div>
-        <h1>Tags Management Page</h1>
-        <Link href="/tag/new" passHref>
-          <Button>Create A Tag</Button>
-        </Link>
-        <Link href={`/tag/edit/${tagObj?.id}`} passHref>
+      {users[0]?.is_author === true ? (
+        <div>
+          <h1>Tags Management Page</h1>
+          <Link href="/tag/new" passHref>
+            <Button>Create A Tag</Button>
+          </Link>
+          {/* <Link href={`/tag/edit/${tagObj?.id}`} passHref>
           <Button variant="warning">Update A Tag</Button>
-        </Link>
-        <div className="d-flex flex-wrap">
-          {/* map over posts here using PostCard component */}
-          {tags.map((tag) => (
-            <TagCard key={tag.id} postObj={tag} />
-          ))}
+        </Link> */}
+          <div className="d-flex">
+            {/* map over posts here using PostCard component */}
+            {tags.map((tag) => (
+              <div>
+                <TagCard key={tag.id} postObj={tag} onUpdate={getAllTheTags} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div> </div>
+      )}
 
       {users[0]?.is_author === true ? (
         <div>
@@ -115,15 +121,15 @@ export default function ProfilePage({ tagObj }) {
           )}
         </div>
       ) : (
-        <h1> 'not posts shown' </h1>
+        <h1> </h1>
       )}
     </>
   );
 }
 
-ProfilePage.propTypes = {
-  tagObj: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  }),
-};
+// ProfilePage.propTypes = {
+//   tagObj: PropTypes.shape({
+//     id: PropTypes.string,
+//     name: PropTypes.string,
+//   }),
+// };
