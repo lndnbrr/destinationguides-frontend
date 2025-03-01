@@ -77,13 +77,12 @@ const updateTag = (payload) =>
 // DELETE TAG
 const deleteTag = (id) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/tags/${id}.json`, {
+    fetch(`${endpoint}/tags/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
       .then((data) => resolve(data))
       .catch(reject);
   });

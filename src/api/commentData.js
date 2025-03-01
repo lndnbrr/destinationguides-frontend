@@ -52,7 +52,7 @@ const createComment = (payload) =>
 const updateComment = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${dbURL}/comments/${payload.id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },

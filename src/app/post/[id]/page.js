@@ -50,7 +50,7 @@ export default function ViewPost({ params }) {
                 <p>💬:</p>
                 <Carousel interval={3000} style={{ width: '400px', margin: 'auto' }}>
                   {comments
-                    .filter((comment) => comment.post === postDetails.id)
+                    .filter((comment) => comment.post.id === postDetails.id)
                     .map((comment) => (
                       <Carousel.Item key={comment.id}>
                         <CommentCard commentObj={comment} onUpdate={getPostComments} />
@@ -65,7 +65,7 @@ export default function ViewPost({ params }) {
 
           <Card style={{ width: '400px', margin: '15px', backgroundColor: 'black', padding: '10px' }}>
             <Card.Body>
-              <CommentForm obj={{ post: id }} onUpdate={getPostComments} commentPostId={id} onSubmit={getPostComments} />
+              <CommentForm obj={{ post: id }} onUpdate={getPostComments} commentPostId={id} />
             </Card.Body>
           </Card>
         </div>
@@ -91,7 +91,6 @@ ViewPost.propTypes = {
     ),
   }),
 };
-
 ViewPost.defaultProps = {
   postDetails: initialState,
 };
